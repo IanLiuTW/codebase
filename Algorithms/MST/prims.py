@@ -1,6 +1,37 @@
 # LeetCode - 1584. Min Cost to Connect All Points
 # https://leetcode.com/problems/min-cost-to-connect-all-points/description/
 
+
+from heapq import heappop, heappush
+
+
+# Prim's Algorithm with Heap
+class Solution:
+    def minCostConnectPoints(self, points: list[list[int]]) -> int:
+        ans = 0
+
+        pts = set(range(len(points)))
+        heap = [(0, 0)]
+
+        while pts:
+            cost, p1_i = heappop(heap)
+            if p1_i not in pts:
+                continue
+
+            ans += cost
+            pts.remove(p1_i)
+
+            for p2_i in pts:
+                heappush(heap, (
+                    abs(points[p1_i][0] - points[p2_i][0]) +
+                    abs(points[p1_i][1] - points[p2_i][1]),
+                    p2_i
+                ))
+
+        return ans
+
+
+# Prim's Algorithm with Dictionary
 class Solution:
     def minCostConnectPoints(self, points: list[list[int]]) -> int:
         ans = 0
