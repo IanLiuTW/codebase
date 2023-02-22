@@ -1,3 +1,4 @@
+# Binary Search Template
 def binary_search(array, target):
     # Boundary: it should cover all possible cases that we need to search
     # Could be [0, n-1], [0, n] etc
@@ -17,3 +18,27 @@ def binary_search(array, target):
     # Return Value: the lo is the minimum index satisfying the condition
     # We have to decide what should be returned. Could be lo, or lo-1, or array[lo]
     return lo
+
+
+# LeetCode - 1011. Capacity To Ship Packages Within D Days
+# https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
+class Solution:
+    def shipWithinDays(self, weights: list[int], days: int) -> int:
+        def days_needed(capacity):
+            cap, days = capacity, 1
+            for w in weights:
+                if cap < w:
+                    cap, days = capacity, days+1
+                cap -= w
+            return days
+
+        lo, hi = max(weights), sum(weights)
+        while lo < hi:
+            mid = (lo+hi) // 2
+            # Here, we find the smallest capacity that can be shipped in days days or less
+            # The result will be the smallest value in the range that satisfies the condition
+            if days_needed(mid) <= days:
+                hi = mid
+            else:
+                lo = mid+1
+        return lo
