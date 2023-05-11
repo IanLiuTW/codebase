@@ -1,3 +1,7 @@
+# Readings:
+# [Python] Powerful Ultimate Binary Search Template. Solved many problems -
+# https://leetcode.com/discuss/general-discussion/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems
+
 # Binary Search Template
 def binary_search(array, target):
     # Boundary: it should cover all possible cases that we need to search
