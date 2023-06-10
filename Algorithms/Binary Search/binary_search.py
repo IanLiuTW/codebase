@@ -24,6 +24,18 @@ def binary_search(array, target):
     return lo
 
 
+# Binary Search Template - Variation
+# This is a variation of the above template where we need to find the maximum value that satisfies the condition
+def binary_search_variation(lo, hi, max_val):
+    while lo < hi:
+        mid = (lo+hi+1)//2
+        if mid <= max_val:
+            lo = mid
+        else:
+            hi = mid-1
+    return lo
+
+
 # LeetCode - 1011. Capacity To Ship Packages Within D Days
 # https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
 class Solution:
