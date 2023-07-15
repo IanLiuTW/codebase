@@ -1,3 +1,36 @@
+#
+
+## Bisect
+
+```rust
+fn bisect_right(a: &Vec<i32>, x: i32) -> usize {
+    let mut lo = 0;
+    let mut hi = a.len();
+
+    while lo < hi {
+        let mid = lo+(hi-lo)/2;
+        if a[mid] > x { hi = mid; } 
+        else { lo = mid+1; }
+    }
+    lo
+}
+
+fn bisect_left(a: &Vec<i32>, x: i32) -> usize {
+    let mut lo = 0;
+    let mut hi = a.len();
+
+    while lo <= hi {
+        let mid = lo+(hi-lo)/2;
+        if a[mid] > x { hi = mid; } 
+        else { lo = mid+1; }
+    }
+    lo
+}
+```
+
+## Binary Tree
+
+```rust
 // Building a binary tree in Rust
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
@@ -49,3 +82,4 @@ impl Solution {
         depth
     }
 }
+```
