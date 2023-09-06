@@ -1,5 +1,9 @@
 from loguru import logger as lo
-from prometheus_client import Counter
+from prometheus_client import make_asgi_app, Counter
+
+
+# In web server like FastAPI, you can expose an endpoint by doing this:
+app.mount("/metrics", make_asgi_app())
 
 
 def cnter_inc(prometheus_cnter: Counter, *args):
