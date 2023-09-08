@@ -20,15 +20,15 @@ async def send_smtp_email(host, port, from_, to, subject, content, additional_he
 
     async def send(msg):
         if EMAIL_MOCK_MODE:
-            lo.info(f"Email mock mode is on, email will not be sent. Email content: \n{msg}")
+            lo.debug(f"Email mock mode is on, email will not be sent. Email content: \n{msg}")
             return
         await aiosmtplib.send(msg, hostname=host, port=port)
 
-    lo.info(f"Sending email from {from_} to {to} with subject {subject}")
+    lo.debug(f"Sending email from {from_} to {to} with subject {subject}")
     try:
         msg = compose()
         await send(msg)
     except Exception as e:
         lo.error(f"Failed to send email from {from_} to {to} with subject {subject} - error: {e}")
     else:
-        lo.info(f"Successfully sent email from {from_} to {to} with subject {subject}")
+        lo.debug(f"Successfully sent email from {from_} to {to} with subject {subject}")

@@ -47,4 +47,4 @@ class Sqlite:
     def create_tables(self):
         for table_name in SQLITE_CONFIG[self.name]["tables"]:
             self.execute(TABLES_SCHEMA[table_name])
-        lo.info(f"Sqlite {self.name} tables created")
+        lo.debug(f"Sqlite {self.name} tables created")

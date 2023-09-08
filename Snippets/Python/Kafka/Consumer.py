@@ -25,7 +25,7 @@ class KafkaConsumer:
         self.running = False
         self.consumer = Consumer(KAFKA_CONSUMER_CONFIG)
         self.msg_process = msg_process
-        lo.info("Kafka consumer created")
+        lo.debug("Kafka consumer created")
 
     async def consume_loop(self):
         while self.running:
@@ -40,6 +40,7 @@ class KafkaConsumer:
                             elif msg.error():
                                 lo.error(f"Error occurred: {str(msg.error())}")
                         else:
+                            lo.debug(f"Received message: {msg.topic()=}, {msg.partition()=}, {msg.offset()=}, {msg.key()=}, {msg.value()=}")
                             self.msg_process(msg)
                             self.__commit()
                     await asyncio.sleep(0.1)
@@ -47,17 +48,17 @@ class KafkaConsumer:
                 lo.error(f"Error occurred: {e}")
             finally:
                 self.consumer.close()
-                lo.info("Kafka consumer connection closed")
+                lo.debug("Kafka consumer connection closed")
 
     def __commit(self):
         self.consumer.commit(asynchronous=False)
-        lo.info("Committed offsets")
+        lo.debug("Committed offsets")
 
     def start(self):
         self.running = True
         asyncio.create_task(self.consume_loop())
-        lo.info("Kafka consumer loop started")
+        lo.debug("Kafka consumer loop started")
 
     def shutdown(self):
         self.running = False
-        lo.info("Kafka consumer stopped")
+        lo.debug("Kafka consumer stopped")
