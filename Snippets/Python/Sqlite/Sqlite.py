@@ -5,7 +5,7 @@ from loguru import logger as lo
 
 SQLITE_CONFIG = {
     "SAMPLE": {
-        "path": "./sample.db",
+        "path": "./sample.sqlite",
         "tables": ["sample1",]
     }
 }
@@ -35,6 +35,7 @@ class Sqlite:
             lo.error(f"Sqlite {self.name} connection failed with error: {e}")
             return
         try:
+            conn.row_factory = sqlite3.Row
             cur = conn.cursor()
             results = cur.execute(sql_query, values).fetchall()
             conn.commit()

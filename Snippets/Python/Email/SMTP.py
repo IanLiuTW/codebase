@@ -1,9 +1,8 @@
 from email.message import EmailMessage
 
-import aiosmtplib
+from aiosmtplib import SMTP
+from config import EMAIL_MOCK_MODE
 from loguru import logger as lo
-
-EMAIL_MOCK_MODE = True
 
 
 async def send_smtp_email(host, port, from_, to, subject, content, additional_headers=None):
@@ -22,7 +21,9 @@ async def send_smtp_email(host, port, from_, to, subject, content, additional_he
         if EMAIL_MOCK_MODE:
             lo.debug(f"Email mock mode is on, email will not be sent. Email content: \n{msg}")
             return
-        await aiosmtplib.send(msg, hostname=host, port=port)
+        smtp_client = SMTP(hostname=host, port=port, validate_certs=False)
+        async with smtp_client:
+            await smtp_client.send_message(msg)
 
     lo.debug(f"Sending email from {from_} to {to} with subject {subject}")
     try:
