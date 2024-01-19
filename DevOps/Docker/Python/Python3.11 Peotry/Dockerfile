@@ -9,7 +9,7 @@ WORKDIR /app
 # Install poetry and use it to export requirements.txt
 RUN pip install poetry
 COPY pyproject.toml poetry.lock ./
-RUN poetry export -f requirements.txt --output requirements.txt
+RUN poetry export --without-hashes -f requirements.txt --output requirements.txt
 
 FROM base as app
 WORKDIR /app
