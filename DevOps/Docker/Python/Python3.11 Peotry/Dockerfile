@@ -16,5 +16,5 @@ COPY --from=poetry /app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 # Copy the source code and run the app
-COPY ./src ./
-CMD python main.py
+COPY ./src ./src
+CMD python src/main.py
