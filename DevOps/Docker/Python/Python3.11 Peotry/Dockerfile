@@ -1,7 +1,3 @@
-# Specify the variables
-ARG SRC_DIR=src
-
-
 FROM python:3.11.4-alpine3.18 as base
 
 FROM base as poetry
@@ -20,5 +16,5 @@ COPY --from=poetry /app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 # Copy the source code and run the app
-COPY ./$SRC_DIR ./src
-CMD python src/main.py
+COPY ./src ./
+CMD python main.py
