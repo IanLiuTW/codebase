@@ -20,4 +20,4 @@ COPY --from=poetry /app/requirements.txt .
 RUN pip install -r requirements.txt
 # Copy the source code and run the app
 COPY ./$SRC_DIR ./$SRC_DIR
-CMD python app_name/main.py
+CMD python $SRC_DIR/main.py
