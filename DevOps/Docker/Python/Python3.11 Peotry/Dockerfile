@@ -1,5 +1,5 @@
 FROM python:3.11.4-alpine3.18 as base
-
+ARG SRC_DIR=src
 
 FROM base as poetry
 WORKDIR /app
@@ -18,5 +18,5 @@ WORKDIR /app
 COPY --from=poetry /app/requirements.txt .
 RUN pip install -r requirements.txt
 # Copy the source code and run the app
-COPY ./app_name ./app_name
+COPY ./$SRC_DIR ./$SRC_DIR
 CMD python app_name/main.py
