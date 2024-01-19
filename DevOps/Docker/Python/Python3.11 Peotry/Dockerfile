@@ -19,5 +19,5 @@ WORKDIR /app
 COPY --from=poetry /app/requirements.txt .
 RUN pip install -r requirements.txt
 # Copy the source code and run the app
-COPY ./$SRC_DIR ./$SRC_DIR
-CMD python $SRC_DIR/main.py
+COPY ./$SRC_DIR ./src
+CMD python src/main.py
