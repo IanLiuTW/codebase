@@ -17,7 +17,8 @@ WORKDIR /app
 # RUN apk add --no-cache build-base git bash
 # RUN ...
 COPY --from=poetry /app/requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 # Copy the source code and run the app
 COPY ./$SRC_DIR ./src
 CMD python src/main.py
