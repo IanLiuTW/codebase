@@ -21,10 +21,6 @@ sudo apt-get update
 sudo apt-get install docker-ce-cli -y
 ln -s "/var/run/docker-host.sock" "/var/run/docker.sock"
 
-# [asdf]
-apt install -y curl git
-cd ~ && git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
-
 # [zsh]
 apt install -y zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -46,24 +42,24 @@ cd ~ && git clone https://github.com/neovim/neovim && cd neovim
 make CMAKE_BUILD_TYPE=RelWithDebInfo
 sudo make install
 
-# [Update config]
+# [stow configs]
 apt install -y stow
 cd ~ && git clone https://github.com/IanLiuTW/config.git && cd config
 rm -rf ~/.zshrc ~/.gitconfig
 stow zsh nvim git
 
-# [nvim requirements]
-export ASDF_DIR="$HOME/.asdf"
-. "$HOME/.asdf/asdf.sh" && asdf plugin add lua && asdf install lua 5.1 && asdf global lua 5.1
-asdf plugin add nodejs
-asdf install nodejs latest
-asdf global nodejs latest
+# [asdf and some languages]
+apt install -y curl git
+cd ~ && git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+export ASDF_DIR="$HOME/.asdf" && . "$HOME/.asdf/asdf.sh" 
+asdf plugin add lua && asdf install lua 5.1 && asdf global lua 5.1
+asdf plugin add nodejs && asdf install nodejs latest && asdf global nodejs latest
 
+# [nvim requirements]
 apt install -y ripgrep fd-find
 
 # [Project]
 # sudo apt-get install unixodbc-dev -y
 # pip install --upgrade pip
-# pip install -r ./services/tupl-de-nifi-functions/requirements.txt
-# pip install -r ./services/tupl-de-nifi-functions/app/requirements.txt
-# pip install pytest # vs code somehow needs it to discover tests (even unittests)
+# pip install -r ./requirements.txt
+# pip install pytest
