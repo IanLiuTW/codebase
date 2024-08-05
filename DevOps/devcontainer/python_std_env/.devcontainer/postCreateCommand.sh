@@ -56,7 +56,7 @@ asdf plugin add lua && asdf install lua 5.1 && asdf global lua 5.1
 asdf plugin add nodejs && asdf install nodejs latest && asdf global nodejs latest
 
 # [nvim requirements]
-apt install -y ripgrep fd-find
+apt install -y ripgrep fd-find jq
 
 # [Project]
 # sudo apt-get install unixodbc-dev -y
