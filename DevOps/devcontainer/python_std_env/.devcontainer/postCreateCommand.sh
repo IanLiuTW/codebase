@@ -28,6 +28,9 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
+# [starship]
+curl -sS https://starship.rs/install.sh | sh
+
 # [fzf]
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
@@ -36,7 +39,7 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 sudo curl -fsSL https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch -o /usr/bin/nerdfetch
 sudo chmod +x /usr/bin/nerdfetch
 
-# [nvim]
+# [neovim]
 apt install -y ninja-build gettext cmake unzip curl build-essential
 cd ~ && git clone https://github.com/neovim/neovim && cd neovim
 make CMAKE_BUILD_TYPE=RelWithDebInfo
@@ -46,7 +49,7 @@ sudo make install
 apt install -y stow
 cd ~ && git clone https://github.com/IanLiuTW/config.git && cd config
 rm -rf ~/.zshrc ~/.gitconfig
-stow zsh nvim git
+stow zsh nvim git starship
 
 # [asdf and some languages]
 apt install -y curl git
