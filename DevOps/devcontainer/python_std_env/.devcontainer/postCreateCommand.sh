@@ -4,6 +4,13 @@
 # Run `zsh` after ssh into the container (TODO: auto set zsh as default shell)
 # Run `checkhealth` in nvim to see what is missing (possibly some formatters)
 
+##### Devcontainer Setup #####
+# [Nix]
+# curl -L https://nixos.org/nix/install | sh -s -- --daemon --yes
+# if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+#   . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+# fi
+
 # [Docker]
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -21,6 +28,13 @@ sudo apt-get update
 sudo apt-get install docker-ce-cli -y
 ln -s "/var/run/docker-host.sock" "/var/run/docker.sock"
 
+##### Project Setup #####
+# sudo apt-get install unixodbc-dev -y
+# pip install --upgrade pip
+# pip install -r ./requirements.txt
+# pip install pytest
+
+##### Development Environment Setup #####
 # [zsh]
 apt install -y zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -29,7 +43,16 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # [starship]
-curl -sS https://starship.rs/install.sh | sh
+curl -sS https://starship.rs/install.sh | sh -s -- --yes
+
+# [eza]
+wget -c https://github.com/eza-community/eza/releases/latest/download/eza_aarch64-unknown-linux-gnu.tar.gz -O - | tar xz
+sudo chmod +x eza
+sudo chown root:root eza
+sudo mv eza /usr/local/bin/eza
+
+# [zoxide]
+curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 
 # [fzf]
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
@@ -39,17 +62,11 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 sudo curl -fsSL https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch -o /usr/bin/nerdfetch
 sudo chmod +x /usr/bin/nerdfetch
 
-# [neovim]
+# [nvim]
 apt install -y ninja-build gettext cmake unzip curl build-essential
 cd ~ && git clone https://github.com/neovim/neovim && cd neovim
 make CMAKE_BUILD_TYPE=RelWithDebInfo
 sudo make install
-
-# [stow configs]
-apt install -y stow
-cd ~ && git clone https://github.com/IanLiuTW/config.git && cd config
-rm -rf ~/.zshrc ~/.gitconfig
-stow zsh nvim git starship
 
 # [asdf and some languages]
 apt install -y curl git
@@ -59,10 +76,10 @@ asdf plugin add lua && asdf install lua 5.1 && asdf global lua 5.1
 asdf plugin add nodejs && asdf install nodejs latest && asdf global nodejs latest
 
 # [nvim requirements]
-apt install -y ripgrep fd-find jq
+apt install -y ripgrep fd-find
 
-# [Project]
-# sudo apt-get install unixodbc-dev -y
-# pip install --upgrade pip
-# pip install -r ./requirements.txt
-# pip install pytest
+# [stow configs]
+apt install -y stow
+cd ~ && git clone https://github.com/IanLiuTW/config.git && cd config
+rm -rf ~/.zshrc ~/.gitconfig
+stow zsh nvim git starship
