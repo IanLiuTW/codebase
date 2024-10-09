@@ -32,6 +32,12 @@ sudo apt-get update
 sudo apt-get install docker-ce-cli -y
 ln -s "/var/run/docker-host.sock" "/var/run/docker.sock"
 
+##### Project Setup #####
+sudo apt-get install unixodbc-dev -y
+pip install --upgrade pip
+# pip install -r ./requirements.txt
+# pip install pytest
+
 ##### Development Environment Setup #####
 # [zsh]
 apt install -y zsh
@@ -81,9 +87,3 @@ apt install -y stow
 cd ~ && git clone https://github.com/IanLiuTW/config.git && cd config
 rm -rf ~/.zshrc ~/.gitconfig
 stow zsh nvim git starship
-
-##### Project Setup #####
-# sudo apt-get install unixodbc-dev -y
-# pip install --upgrade pip
-# pip install -r ./requirements.txt
-# pip install pytest
