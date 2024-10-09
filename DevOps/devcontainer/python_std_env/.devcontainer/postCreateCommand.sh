@@ -1,8 +1,12 @@
 ##### Intro #####
 # The script installs docker and enable the docker.sock to be shared with the host
-# It also install all the necessary tools for my development environment
-# Run `zsh` after ssh into the container (TODO: auto set zsh as default shell)
-# Run `checkhealth` in nvim to see what is missing (possibly some formatters)
+# It also install all the necessary tools for the python development environment
+# NOTE:
+# 1. Change the python version into the desired on in the `devcontainer.json`.
+# 2. Enable the project setttings at the bottom of the file.
+# 3. Run `checkhealth` in nvim to see what is missing (possibly some formatters).
+# TODO:
+# 1. Make zsh the default shell w/o breaking the fzf initialzation
 
 ##### Devcontainer Setup #####
 # [Nix]
@@ -28,12 +32,6 @@ sudo apt-get update
 sudo apt-get install docker-ce-cli -y
 ln -s "/var/run/docker-host.sock" "/var/run/docker.sock"
 
-##### Project Setup #####
-# sudo apt-get install unixodbc-dev -y
-# pip install --upgrade pip
-# pip install -r ./requirements.txt
-# pip install pytest
-
 ##### Development Environment Setup #####
 # [zsh]
 apt install -y zsh
@@ -56,7 +54,7 @@ curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh 
 
 # [fzf]
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
+~/.fzf/install --all
 
 # [nerdfetch]
 sudo curl -fsSL https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch -o /usr/bin/nerdfetch
@@ -83,3 +81,9 @@ apt install -y stow
 cd ~ && git clone https://github.com/IanLiuTW/config.git && cd config
 rm -rf ~/.zshrc ~/.gitconfig
 stow zsh nvim git starship
+
+##### Project Setup #####
+# sudo apt-get install unixodbc-dev -y
+# pip install --upgrade pip
+# pip install -r ./requirements.txt
+# pip install pytest
