@@ -1,10 +1,14 @@
 {
-  "name": "Python Standard Environment",
+  "name": "standard_dev-python",
   "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
   "forwardPorts": [3000],
   "postCreateCommand": "chmod +x ./.devcontainer/postCreateCommand.sh && ./.devcontainer/postCreateCommand.sh",
   "remoteUser": "root",
+  "containerEnv": {
+    "SHELL": "/usr/bin/zsh"
+  },
   "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/github-copilot,target=/root/.config/github-copilot,type=bind,consistency=cached"
   ]
 }
