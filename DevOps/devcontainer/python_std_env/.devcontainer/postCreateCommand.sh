@@ -25,4 +25,4 @@ ln -s "/var/run/docker-host.sock" "/var/run/docker.sock"
 # pip install -r ./requirements.txt
 # pip install pytest
 
-git clone https://github.com/IanLiuTW/config && chmod +x ./config/_scripts/dev_env/setup_apt.sh && ./config/_scripts/dev_env/setup_apt.sh
+git clone https://github.com/IanLiuTW/config ~/config && chmod +x ~/config/_scripts/dev_env/setup_apt.sh && ~/config/_scripts/dev_env/setup_apt.sh
