@@ -1,0 +1,40 @@
+name: Rust CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - uses: swatinem/rust-cache@v2
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-deny, cargo-tarpaulin, cargo-about
+
+      - name: Test Coverage
+        run: cargo tarpaulin --out Xml --fail-under 80
+
+      - name: Check Formatting
+        run: cargo fmt --all -- --check
+
+      - name: Clippy (Linting)
+        run: cargo clippy -- -D warnings
+
+      - name: Security Audit
+        run: cargo audit
+
+      - name: License Check
+        run: cargo deny check
+
+      - name: Generate License List
+        run: cargo about generate about.hbs > license.html
+        continue-on-error: true
+
+      - name: Build Release
+        run: cargo build --release
