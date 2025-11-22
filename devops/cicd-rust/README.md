@@ -26,7 +26,7 @@ The following tools must be installed locally:
 
 ### Repository Layout
 
-For single workspace projects, delete the `crates/` folder and place all code directly in the root.
+For single workspace projects, delete the `crates/` folder and place all structure directly in the root.
 
 ```
 .
@@ -67,12 +67,14 @@ Create a workspace and immediately apply performance optimizations so you do not
 ```
 cargo new my-app
 cd my-app
-
-# Use cargo wizard to set optimal profiles
-cargo wizard
 ```
 
 The wizard configures LTO, panic aborts, codegen units, and other flags that reduce binary size and improve runtime speed.
+
+```
+# Use cargo wizard to set optimal profiles
+cargo wizard
+```
 
 ### 2. Create all the configuration files
 
@@ -88,24 +90,23 @@ The wizard configures LTO, panic aborts, codegen units, and other flags that red
 Bacon gives you near instant feedback while editing. It watches the workspace, compiles incrementally, and reports issues without waiting for a manual test run.
 
 ```
-bacon nextest
+bacon
 ```
-
-Use `t` to see tests and `c` to see cippy warnings. If bacon turns red, fix your crimes before committing more.
 
 ### 4. Pre Push Checklist
 
 Before pushing to any feature branch, confirm that the CI pipeline will not burst into flames.
 
 ```
+cargo nextest run
 cargo fmt
 cargo clippy -- -D warnings
-cargo nextest run
 ```
 
-If clippy finds a problem, assume it is right. It usually is.
-
 ## CI and Caching
+
+- [Example Dockerfile](docker/)
+- [Example CI Github Actions](github/)
 
 GitHub Actions uses swatinem/rust cache to avoid unnecessary recompilation. The cache key is derived from Cargo.lock. If dependencies remain unchanged, CI restores binaries directly from cache.
 
@@ -119,7 +120,7 @@ Staging builds (feature branches):
 
 Production builds (releases):
 
-- Creating a tag like `v1.0.0` triggers CI to build `my-app:1.0.0` and `my-app:latest`.
+- Creating a tag like `v1.0.0` triggers CI to build `my-app:1.0.0` and `my-app:latest`. (See Release Workflow)
 
 If you need manual tagging, something already went wrong upstream.
 
@@ -133,8 +134,6 @@ Releases are handled through cargo release to ensure version consistency across 
 
 - Never create git tags yourself.
 
-- Never try to outsmart cargo release. You will lose.
-
 ### How to Ship
 
 1.  Ensure you are on the main branch with a clean working tree.
@@ -145,7 +144,7 @@ Releases are handled through cargo release to ensure version consistency across 
 cargo release 1.1.0
 ```
 
-1.  Execute the release:
+3.  Execute the release:
 
 ```
 cargo release 1.1.0 --execute
@@ -153,7 +152,7 @@ cargo release 1.1.0 --execute
 
 ### What Happens After
 
-- Versions are incremented and committed.
+- Versions are updated and committed.
 
 - A tag is created and pushed.
 
