@@ -143,13 +143,13 @@ Releases are handled through cargo release to ensure version consistency across 
 2.  Perform a dry run:
 
 ```
-cargo release 1.1.0
+cargo release 0.1.0
 ```
 
 3.  Execute the release:
 
 ```
-cargo release 1.1.0 --execute
+cargo release 0.1.0 --execute
 ```
 
 ### What Happens After
@@ -161,3 +161,249 @@ cargo release 1.1.0 --execute
 - GitHub Actions triggers the production pipeline.
 
 - Docker images `my-app:1.1.0` and `my-app:latest` are built and published.
+
+## 📘 Operational Playbook
+
+### 🧠 Part 1: Team Coordination Principles
+
+To make this technical setup work, your team must agree on **Trunk-Based Development**.
+
+**The 4 Golden Rules:**
+
+1. **Main is Sacred:** The main branch must *always* be compile-able and deployable. You never push broken code to main.
+2. **Short-Lived Branches:** Feature branches (feat/login) should live for 1-2 days max. If a feature takes 2 weeks, break it down or use Feature Flags (Scenario E).
+3. **Immutable Artifacts:** Once a Docker image is built (e.g., my-app:1.0.0), it **never** changes. If you find a bug, you don't overwrite 1.0.0; you release 1.0.1.
+4. **DevOps is Everyone's Job:** Developers don't just write code; they own the release process (via cargo release).
+
+### 🎬 Part 2: Workflows & Scenarios
+
+Here are the specific recipes for daily life in this repository.
+
+#### Scenario A: The Daily Feature (Standard Dev)
+
+*Goal: Add a new login button.*
+
+1. **Start:** Update your local main.
+
+    ```bash
+    git checkout main && git pull
+    git checkout -b feat/login-button
+    ```
+
+2. **Develop:**
+    * Open terminal 1: Run cargo bacon (it watches your code).
+    * Write code. If Bacon turns red, fix it immediately.
+    * Write a test in src/lib.rs or tests/.
+
+3. **Staging Deployment (The "Magic" Step):**
+    * You want to show your Product Manager the button, but it's not merged yet.
+    * **Action:** git push origin feat/login-button
+    * **Result:** Your CI builds my-registry/my-app:feat-login-button.
+    * **Note:** This tag is *mutable*. If you push again in an hour, this image gets overwritten with the new code.
+    * **Team:** Tell the PM: *"Deploy the image feat-login-button to the staging server."*
+
+4. **Merge:**
+    * Open a Pull Request (PR).
+    * CI runs nextest, clippy, fmt.
+    * Team reviews.
+    * **Merge to Main.**
+
+#### Scenario B: The Release Train (Going to Production)
+
+*Goal: We have accumulated 5 features on Main. Time to ship v1.1.0.*
+
+1. **Preparation:**
+
+    ```bash
+    git checkout main && git pull
+    ```
+
+2. **The Release:**
+    * You don't edit files manually. You let the tool do the math.
+    * *Assumption: We added features, so this is a Minor release.*
+
+    ```bash
+    # 1. Check what will happen (Dry Run)
+    cargo release minor
+
+    # 2. Fire the laser
+    cargo release minor --execute
+    ```
+
+3. **The Automation Result:**
+    * Cargo.toml updates (e.g., 1.0.0 -> 1.1.0).
+    * CHANGELOG.md is auto-generated with the 5 features.
+    * Git tag v1.1.0 is pushed.
+    * **CI:** Builds my-app:1.1.0 and my-app:latest.
+
+4. **Deploy:** Update your production Kubernetes/Docker-Compose to use my-app:1.1.0.
+
+#### Scenario C: The "Alpha" Cycle (Big Risky Feature)
+
+*Goal: We are rewriting the database layer. It will take weeks. We need to test it on servers without breaking Production.*
+
+1. **Development Phase:**
+    * Merge code to main as usual. Do **not** tag yet. Wait until you have enough changes to justify a test snapshot.
+
+2. **Start Cycle (First Drop):**
+    * We are bumping from 1.1.0 to the next feature alpha.
+
+    ```bash
+    cargo release minor alpha --execute
+    # Result: v1.2.0-alpha.1
+    ```
+
+
+3. **Iterate (Subsequent Drops):**
+    * Fixed bugs? Ready for drop #2?
+
+    ```bash
+    cargo release alpha --execute
+    # Result: v1.2.0-alpha.2
+    ```
+
+    * **Safety:** CI builds the image, but does **NOT** update my-app:latest.
+
+4. **Finalize (Go Gold):**
+    * QA approves. Promote alpha to Stable.
+
+    ```bash
+    cargo release release --execute
+    # Result: v1.2.0 (Stable)
+    ```
+
+#### Scenario D: The Emergency Hotfix (Firefighting)
+
+*Goal: Production is running v1.1.0. A critical crash is found. Main is already on v1.2.0-dev (unstable).*
+
+1. **Travel to the Past:**
+
+    ```bash
+    git fetch --tags
+    git checkout -b hotfix/v1.1.1 v1.1.0
+    ```
+
+2. **Fix:**
+    * Apply the fix. Run cargo nextest.
+
+3. **Release the Patch:**
+    * Because we updated release.toml, hotfix branches are allowed.
+
+    ```bash
+    cargo release patch --execute
+    # Result: v1.1.1
+    ```
+
+4. **Deploy:** Ship my-app:1.1.1 to Prod immediately.
+
+5. **Reconcile (Cherry Pick):**
+    * **CRITICAL:** You must fix main too, or the bug will come back in v1.2.0.
+
+    ```bash
+    git checkout main
+    git cherry-pick &lt;commit-hash-of-fix>
+    git push
+    ```
+
+#### Scenario E: The "Long Feature" (Feature Flags)
+
+*Goal: A massive feature that takes 3 weeks, but you don't want a 3-week-old branch (Merge Hell).*
+
+**The Strategy:** You merge code to main *every day*, but you keep it disabled.
+
+1. **Cargo.toml:**
+
+    ``` TOML
+    [features]
+    default = []
+    new_billing_system = [] # The flag
+    ```
+
+2. **The Code:**
+
+    ```Rust
+    #[cfg(feature = "new_billing_system")]
+    fn calculate_billing() {
+       // New complex logic
+    }
+    ```
+
+3. **The Flow:**
+    * You merge to main daily.
+    * Production uses my-app:latest (default features). The code is there, but compiled out or disabled.
+    * You test locally with: cargo run --features new_billing_system.
+
+### 🛡️ Monitoring Your CI Health
+
+With this setup, here is how to read your pipeline signals:
+
+* **Red "Test" Job:** The code is logically broken. Check cargo nextest locally.
+* **Red "Lint/Clippy" Job:** The code works, but looks messy or unsafe. Check cargo clippy.
+* **Red "Security Audit":** A dependency you use has a known vulnerability. Run cargo audit locally and upgrade that library.
+* **Red "Docker Build":** Usually means you added a file to the repo but forgot to update the Dockerfile COPY command, or the cargo-chef recipe failed.
+
+### 💡 Cargo Release Cheatsheet
+
+<table>
+  <tr>
+   <td><strong>Current Ver</strong>
+   </td>
+   <td><strong>Command</strong>
+   </td>
+   <td><strong>New Ver</strong>
+   </td>
+   <td><strong>Context</strong>
+   </td>
+  </tr>
+  <tr>
+   <td><strong>1.0.0</strong>
+   </td>
+   <td>cargo release patch
+   </td>
+   <td><strong>1.0.1</strong>
+   </td>
+   <td>Standard bug fix
+   </td>
+  </tr>
+  <tr>
+   <td><strong>1.0.0</strong>
+   </td>
+   <td>cargo release minor
+   </td>
+   <td><strong>1.1.0</strong>
+   </td>
+   <td>New features added
+   </td>
+  </tr>
+  <tr>
+   <td><strong>1.0.0</strong>
+   </td>
+   <td>cargo release minor alpha
+   </td>
+   <td><strong>1.1.0-alpha.1</strong>
+   </td>
+   <td>Start a new Alpha cycle
+   </td>
+  </tr>
+  <tr>
+   <td><strong>1.1.0-alpha.1</strong>
+   </td>
+   <td>cargo release alpha
+   </td>
+   <td><strong>1.1.0-alpha.2</strong>
+   </td>
+   <td>Next alpha drop
+   </td>
+  </tr>
+  <tr>
+   <td><strong>1.1.0-alpha.2</strong>
+   </td>
+   <td>cargo release release
+   </td>
+   <td><strong>1.1.0</strong>
+   </td>
+   <td>Promote Alpha to Stable
+   </td>
+  </tr>
+</table>
+

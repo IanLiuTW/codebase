@@ -1,7 +1,7 @@
-allow-branch = ["main", "master"]
-sign-commit = false
-sign-tag = false
+allow-branch = ["main", "master", "hotfix/*"]
 push = true
 publish = false 
+sign-commit = false
+sign-tag = false
 
 pre-release-hook = ["sh", "-c", "git cliff -o CHANGELOG.md --tag {{version}} && git add CHANGELOG.md"]
