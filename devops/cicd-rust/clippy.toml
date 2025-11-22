@@ -1,0 +1,26 @@
+# Fail on any warning produced by Clippy
+warn-once = false
+
+# Turn selected categories into hard errors
+# Good for teams that want consistency enforced by the compiler
+deny = [
+    "clippy::unwrap_used",
+    "clippy::expect_used",
+    "clippy::panic",
+    "clippy::todo",
+    "clippy::unimplemented",
+    "clippy::clone_on_ref_ptr",
+    "clippy::map_unwrap_or",
+]
+
+warn = [
+    "clippy::pedantic",
+    "clippy::nursery",
+]
+
+# Allow lints that tend to create noise without real value
+allow = [
+    "clippy::module_name_repetitions",
+    "clippy::missing_errors_doc",
+    "clippy::missing_panics_doc",
+]

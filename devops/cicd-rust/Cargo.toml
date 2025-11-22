@@ -1,0 +1,15 @@
+[workspace]
+members = [
+    "crates/my-app-core",
+    "crates/my-app-server"
+]
+
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+
+[workspace.metadata.release]
+# Ensures cargo release respects the workspace structure
+shared-version = true
+dependent-version = "upgrade"
