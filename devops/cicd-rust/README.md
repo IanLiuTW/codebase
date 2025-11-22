@@ -105,6 +105,8 @@ cargo clippy -- -D warnings
 
 ## CI and Caching
 
+Make sure you have set up Dockerfile and CI pipeline. This section will assume you are using the examples provided below.
+
 - [Example Dockerfile](docker/)
 - [Example CI Github Actions](github/)
 
