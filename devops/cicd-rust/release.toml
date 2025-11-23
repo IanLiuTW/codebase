@@ -4,4 +4,5 @@ publish = false
 sign-commit = false
 sign-tag = false
 
+pre-release-commit-message = "ci: Release {{crate_name}} version {{version}}"
 pre-release-hook = ["sh", "-c", "git cliff -o CHANGELOG.md --tag {{version}} && git add CHANGELOG.md"]
