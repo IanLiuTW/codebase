@@ -76,7 +76,7 @@ The wizard configures LTO, panic aborts, codegen units, and other flags that red
 cargo wizard
 ```
 
-### 2. Create all the configuration files
+### 2. Create config files and set up git and versioning
 
 - [rust-toolchain.toml](rust-toolchain.toml)
 - [release.toml](release.toml)
@@ -84,6 +84,9 @@ cargo wizard
 - [cliff.toml](cliff.toml)
 - [clippy.toml](clippy.toml) - (Optional)
 - [Cargo.toml](Cargo.toml) - (Optional) Example of a workspace setup
+
+> [!NOTE]
+> Create an initial git commit and set up the upstream git repository here. Consider adding a license.
 
 ### 3. Live Development Loop with Bacon
 

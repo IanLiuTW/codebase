@@ -1,0 +1,12 @@
+# Ignore the build artifacts
+target/
+
+# Ignore git history (saves space)
+.git/
+
+# Ignore the Dockerfile itself (optional, but clean)
+Dockerfile
+.dockerignore
+
+# Ignore environment variables (Security risk if copied!)
+.env

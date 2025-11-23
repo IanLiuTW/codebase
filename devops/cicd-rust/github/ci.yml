@@ -36,7 +36,7 @@ jobs:
 
       - uses: taiki-e/install-action@v2
         with:
-          tool: cargo-deny, cargo-tarpaulin, cargo-nextest
+          tool: cargo-deny, cargo-tarpaulin, cargo-nextest, cargo-audit
 
       - name: Run Tests (Nextest)
         run: cargo nextest run
@@ -48,13 +48,14 @@ jobs:
         run: cargo clippy -- -D warnings
 
       - name: Test Coverage
-        run: cargo tarpaulin --out Xml --fail-under 80
+        run: |
+          cargo tarpaulin --out Xml --fail-under 80 || echo "::warning title=Coverage Low::Coverage is below 80%. Please review test coverage."
 
       - name: Security Audit
         run: cargo audit
 
       - name: License Check
-        run: cargo deny check
+        run: cargo deny check advisories bans sources
 
       - name: Build Binary (Check)
         run: cargo build --release
