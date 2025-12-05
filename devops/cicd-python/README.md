@@ -177,7 +177,7 @@ uv run cz bump --increment patch
 4. Push to git
 
 ```
-git push --follow-tags
+git push && git push --tags
 ```
 
 ### What Happens After
