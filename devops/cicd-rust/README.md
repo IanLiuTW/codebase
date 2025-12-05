@@ -117,6 +117,9 @@ GitHub Actions uses swatinem/rust cache to avoid unnecessary recompilation. The 
 
 No configuration is needed on your side. Every push to every branch benefits from the cache.
 
+> [!NOTE]
+> Go through the docker and CI files to double check the content. Make sure all CI secrets are set up.
+
 ### Docker Build Strategy
 
 Staging builds (feature branches):

@@ -34,8 +34,12 @@ jobs:
       - name: Linting (Ruff)
         run: uv run ruff check .
 
-      - name: Run Tests & Coverage
+      - name: Run Tests
         run: uv run pytest
+
+      - name: Run Coverage
+        run: |
+          uv run pytest --cov --cov-fail-under 80 || echo "::warning title=Coverage Low::Coverage is below 80%. Please review test coverage."
 
       - name: Security Audit
         run: uv run pip-audit
